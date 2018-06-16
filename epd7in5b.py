@@ -70,6 +70,15 @@ GET_STATUS                                  = 0x71
 AUTO_MEASUREMENT_VCOM                       = 0x80
 READ_VCOM_VALUE                             = 0x81
 VCM_DC_SETTING                              = 0x82
+# https://github.com/ZinggJM/GxEPD/blob/master/GxGDEW027C44/GxGDEW027C44.cpp
+LUT_WW = [
+  0x90  , 0x1A  , 0x1A  , 0x00  , 0x00  , 0x01,
+  0x40  , 0x0A  , 0x0A  , 0x00  , 0x00  , 0x08,
+  0x84  , 0x0E  , 0x01  , 0x0E  , 0x01  , 0x10,
+  0x80  , 0x0A  , 0x0A  , 0x00  , 0x00  , 0x08,
+  0x00  , 0x04  , 0x10  , 0x00  , 0x00  , 0x05,
+  0x00  , 0x03  , 0x0E  , 0x00  , 0x00  , 0x0A,
+  0x00  , 0x23  , 0x00  , 0x00  , 0x00  , 0x01 ]
 
 class EPD:
     def __init__(self):
@@ -99,6 +108,40 @@ class EPD:
         # the parameter type is list but not int
         # so use [data] instead of data
         epdif.spi_transfer([data])
+
+    def init_quick(self):
+        if (epdif.epd_init() != 0):
+            return -1
+        self.reset()
+        self.send_command(POWER_SETTING)
+        self.send_data(0x37)
+        self.send_data(0x00)
+        self.send_command(PANEL_SETTING)
+        self.send_data(0xCF)
+        self.send_data(0x08)
+        self.send_command(BOOSTER_SOFT_START)
+        self.send_data(0xc7)
+        self.send_data(0xcc)
+        self.send_data(0x28)
+        self.send_command(POWER_ON)
+        self.wait_until_idle()
+        self.send(0x65, 0x01)
+        self.send(0xb9)
+        self.send(0x65, 0x00)
+        self.send(0x00, 0xcf, 0x80)
+        self.send(0x30, 0x3a)
+        self.send(0x61, 0x02, 0x80, 0x01, 0x80)
+        self.send(0x82, 0x1e)
+        self.send(0x50, 0x17, 0x22)
+
+    def send(self, command, *data):
+        self.send_command(command)
+        for i in data:
+            if isinstance(i, list):
+                for x in i:
+                    self.send_data(x)
+            else:
+                self.send_data(i)
 
     def init(self):
         if (epdif.epd_init() != 0):
@@ -130,13 +173,21 @@ class EPD:
         self.send_data(0x01)     #gate 384
         self.send_data(0x80)
         self.send_command(VCM_DC_SETTING)
-        self.send_data(0x1E)      #decide by LUT file
+        self.send_data(0x17)      #decide by LUT file
         self.send_command(0xe5)           #FLASH MODE
         self.send_data(0x03)
 
     def wait_until_idle(self):
         while(self.digital_read(self.busy_pin) == 0):      # 0: busy, 1: idle
             self.delay_ms(100)
+
+    def read_temperature(self):
+        self.send(0x43)
+        #self.wait_until_idle()
+        digits = []
+        for i in range(511):
+          digits.append(self.digital_read(i))
+        return digits
 
     def reset(self):
         self.digital_write(self.reset_pin, GPIO.LOW)         # module reset
@@ -167,6 +218,7 @@ class EPD:
                     buf[(x + y * self.width) // 4] |= 0xC0 >> (x % 4 * 2)
         return buf
 
+
     def display_frame(self, frame_buffer):
         self.send_command(DATA_START_TRANSMISSION_1)
         for i in range(0, self.width // 4 * self.height):
@@ -193,6 +245,7 @@ class EPD:
                 j += 1
         self.send_command(DISPLAY_REFRESH)
         self.delay_ms(100)
+        #self.send_command(LUT_WHITE)
         self.wait_until_idle()
 
     def sleep(self):
