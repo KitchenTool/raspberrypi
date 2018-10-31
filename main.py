@@ -35,20 +35,19 @@ def main():
       epd = epd7in5b.EPD()
       epd.init()
 
-      # Timestamp
+      # Prepare timestamp and weather data
+      os.system("curl https://wttr.in/Copenhagen_tqp0.png 2>/dev/null > " + WEATHER_IMAGE)
       timestamp = datetime.now(pytz.timezone('Europe/Copenhagen'))
+      time.sleep(5)
 
       # For simplicity, the arguments are explicit numerical coordinates
       image = Image.new('L', (EPD_WIDTH, EPD_HEIGHT), 255) # 255: clear the frame
       draw_on_image(timestamp, image)
       epd.display_frame(epd.get_frame_buffer(image))
 
-      # Prepare weather data for next picture
-      os.system("curl https://wttr.in/Copenhagen_tqp0.png 2>/dev/null > " + WEATHER_IMAGE)
-
       # time until next 10 minutes
       time_after = timestamp.minute % 10 * 60 + timestamp.second
-      time_until = 600 - time_after - 5 # 5 sec buffer
+      time_until = 600 - time_after - 5 # 7 sec buffer
       time.sleep(time_until)
 
 def draw_on_image(timestamp, image):
