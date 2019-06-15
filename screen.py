@@ -31,12 +31,12 @@ QUOTES = [
 def get_image():
     # Prepare timestamp weather data
     timestamp = datetime.now(pytz.timezone('Europe/Copenhagen'))
-    weather_json = request.urlopen('https://api.openweathermap.org/data/2.5/weather?q=Copenhagen,DK&appid='+API_KEY).read()
-    weather = json.loads(weather_json).decode()
+    weather_json = request.urlopen('https://api.openweathermap.org/data/2.5/weather?q=Copenhagen,DK&appid='+API_KEY).read().decode()
+    weather = json.loads(weather_json)
 
     # Prepare location data
     location_kristin = request.urlopen('https://server.kristinkalt.now.sh/location/Kristin').read().decode()
-    location_jens = request.urlopen('https://server.kristinkalt.now.sh/location/Kristin').read().decode()
+    location_jens = request.urlopen('https://server.kristinkalt.now.sh/location/Jens').read().decode()
 
     # For simplicity, the arguments are explicit numerical coordinates
     image = Image.new('L', (EPD_WIDTH, EPD_HEIGHT), 255) # 255: clear the frame
@@ -76,7 +76,7 @@ def draw_on_image(timestamp, weather, location_kristin, location_jens, image):
     font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 30)
     quote = random.choice(QUOTES)
     w, h = draw.textsize(quote, font)
-    draw.text(((EPD_WIDTH // 2 - w // 2), 300), quote, font = font, fill = 127)
+    draw.text(((EPD_WIDTH // 2 - w // 2), 290 + (max(0, 42 - (h // 2)))), quote, font = font, fill = 127)
 
 if __name__ == "__main__":
     get_image().show()
