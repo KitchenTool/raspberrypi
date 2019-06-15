@@ -32,7 +32,7 @@ def get_image():
     # Prepare timestamp weather data
     timestamp = datetime.now(pytz.timezone('Europe/Copenhagen'))
     weather_json = request.urlopen('https://api.openweathermap.org/data/2.5/weather?q=Copenhagen,DK&appid='+API_KEY).read()
-    weather = json.loads(weather_json)
+    weather = json.loads(weather_json).decode()
 
     # Prepare location data
     location_kristin = request.urlopen('https://server.kristinkalt.now.sh/location/Kristin').read().decode()
