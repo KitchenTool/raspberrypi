@@ -61,22 +61,22 @@ def draw_on_image(timestamp, weather, location_kristin, location_jens, image):
     time_text = timestamp.strftime("%H:%M")
     time_text = time_text[:-1] + "?"
     w, h = draw.textsize(time_text, font)
-    draw.text((EPD_WIDTH // 2 - w //2, 50), time_text, font = font, fill = 0)
+    draw.text((EPD_WIDTH // 2 - w //2, 35), time_text, font = font, fill = 0)
 
     # Location
-    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 30)
+    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 40)
     kristin_text = "Kristin: {}".format(location_kristin)
     w, h = draw.textsize(kristin_text, font)
-    draw.text((EPD_WIDTH // 4 - w // 2, 260), kristin_text, font = font, fill = 0)
+    draw.text((143, 210), kristin_text, font = font, fill = 0)
     jens_text = "Jens: {}".format(location_jens)
     w, h = draw.textsize(jens_text, font)
-    draw.text((EPD_WIDTH - (EPD_WIDTH // 4) - w // 2, 260), jens_text, font = font, fill = 0)
+    draw.text((215, 250), jens_text, font = font, fill = 0)
 
     # Quotes
-    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 20)
+    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 30)
     quote = random.choice(QUOTES)
     w, h = draw.textsize(quote, font)
-    draw.text(((EPD_WIDTH // 2 - w // 2), 320), quote, font = font, fill = 127)
+    draw.text(((EPD_WIDTH // 2 - w // 2), 300), quote, font = font, fill = 127)
 
 if __name__ == "__main__":
     get_image().show()
