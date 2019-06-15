@@ -22,11 +22,10 @@ QUOTES = [
   , "DMI is so pessimistic\n    - Andreas"
   , "I'm SO funny!\n    - Kristin"
   , "I'm tiiiiiirrreeeeeeeed\n    - Kristin"
-  , "Skildpadde drikker mælk\n    - Kristin"
+  , "Skildpadde drikker malk\n    - Kristin"
   , "When you think you lack words\nWhat you really lack is ideas\n- Jens"
   , "BAU CHICKA WA-WAAAAU"
-  , "Jens is the most awesome person!\n- Kristin and Andreas"
-  , "Jens never has to clean. Ever!\n- Kristin and Andreas"
+  , "Kristin is the most awesome person!\n- Jens and Andreas"
   ]
 
 def main():
@@ -35,15 +34,19 @@ def main():
       epd = epd7in5b.EPD()
       epd.init()
 
-      # Prepare timestamp and weather data
-      os.system("curl https://wttr.in/Copenhagen_tqp0.png 2>/dev/null > " + WEATHER_IMAGE)
-      timestamp = datetime.now(pytz.timezone('Europe/Copenhagen'))
-      time.sleep(5)
+      try:
+        # Prepare timestamp and weather data
+        os.system("curl https://wttr.in/Copenhagen_tqp0.png 2>/dev/null > " + WEATHER_IMAGE)
+        timestamp = datetime.now(pytz.timezone('Europe/Copenhagen'))
+        time.sleep(5)
 
-      # For simplicity, the arguments are explicit numerical coordinates
-      image = Image.new('L', (EPD_WIDTH, EPD_HEIGHT), 255) # 255: clear the frame
-      draw_on_image(timestamp, image)
-      epd.display_frame(epd.get_frame_buffer(image))
+        # For simplicity, the arguments are explicit numerical coordinates
+        image = Image.new('L', (EPD_WIDTH, EPD_HEIGHT), 255) # 255: clear the frame
+        draw_on_image(timestamp, image)
+        epd.display_frame(epd.get_frame_buffer(image))
+      
+      except Exception as e:
+        print("Failed to render", e)
 
       # time until next 10 minutes
       time_after = timestamp.minute % 10 * 60 + timestamp.second
