@@ -1,3 +1,4 @@
 __pycache__/
 *.pyc
 openweathermap_key.py
+*.log

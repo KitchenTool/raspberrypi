@@ -9,11 +9,12 @@ import screen
 if __name__ == '__main__':
     # Loop and redraw every 60 seconds
     while True:
-      epd = epd7in5b.EPD()
-      epd.init()
-      timestamp = datetime.now(pytz.timezone('Europe/Copenhagen'))
 
       try:
+        epd = epd7in5b.EPD()
+        epd.init()
+        timestamp = datetime.now(pytz.timezone('Europe/Copenhagen'))
+
         image = screen.get_image()
         epd.display_frame(epd.get_frame_buffer(image))
       
