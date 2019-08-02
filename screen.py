@@ -26,6 +26,7 @@ QUOTES = [
   , "When you think you lack words\nWhat you really lack is ideas\n- Jens"
   , "BAU CHICKA WA-WAAAAU"
   , "Kristin is the most awesome person!\n- Jens and Andreas"
+  , "Your comfort zone is your enemy\n- Kristin when in bed"
   ]
   
 def get_image():
