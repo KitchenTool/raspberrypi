@@ -36,8 +36,10 @@ def get_image():
     weather = json.loads(weather_json)
 
     # Prepare location data
-    location_kristin = request.urlopen('https://server.kristinkalt.now.sh/location/Kristin').read().decode()
-    location_jens = request.urlopen('https://server.kristinkalt.now.sh/location/Jens').read().decode()
+    location_kristin = request.urlopen('https://server.kristinkalt.vercel.app/location/Kristin').read().decode()
+    location_jens = request.urlopen('https://server.kristinkalt.vercel.app/location/Jens').read().decode()
+    # OVERWRITTEN
+    location_kristin = location_jens = "Home"
 
     # For simplicity, the arguments are explicit numerical coordinates
     image = Image.new('L', (EPD_WIDTH, EPD_HEIGHT), 255) # 255: clear the frame
