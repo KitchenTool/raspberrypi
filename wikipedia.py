@@ -5,7 +5,7 @@ import datetime
 import random
 
 REF_REGEX = re.compile(r"\[\d+\]")
-DAY_FILE = "today.txt"
+DAY_FILE = "/tmp/today.txt"
 
 def random_event():
     try:
