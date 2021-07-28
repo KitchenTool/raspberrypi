@@ -2,3 +2,5 @@ __pycache__/
 *.pyc
 openweathermap_key.py
 *.log
+.venv/
+.ipynb_checkpoints/

@@ -6,28 +6,15 @@ from PIL import ImageOps
 from datetime import datetime
 from urllib import request
 import json
-import random
+import textwrap
 import pytz
-import time
 
 from openweathermap_key import API_KEY
+import wikipedia
 
 EPD_WIDTH = 640
 EPD_HEIGHT = 384
 
-QUOTES = [
-    "I don't know\n    - Andreas"
-  , "Stupidity is doing the same thing twice,\nand expecting a different result\n    - Kristin"
-  , "Oh, so hot\n    - Andreas"
-  , "DMI is so pessimistic\n    - Andreas"
-  , "I'm SO funny!\n    - Kristin"
-  , "I'm tiiiiiirrreeeeeeeed\n    - Kristin"
-  , "Skildpadde drikker malk\n    - Kristin"
-  , "When you think you lack words\nWhat you really lack is ideas\n- Jens"
-  , "BAU CHICKA WA-WAAAAU"
-  , "Kristin is the most awesome person!\n- Jens and Andreas"
-  , "Your comfort zone is your enemy\n- Kristin when in bed"
-  ]
   
 def get_image():
     # Prepare timestamp weather data
@@ -51,7 +38,7 @@ def draw_on_image(timestamp, weather, location_kristin, location_jens, image):
     #draw.rectangle((0, 6, 640, 40), fill = 127)
 
     # Date and weather
-    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 25)
+    font = ImageFont.truetype('NotoSans-Bold.ttf', 25)
     date_text = timestamp.strftime("%A %d/%m/%y")
     condition = weather['weather'][0]['main'] # Weather condition like 'Rain'
     temperature = round(weather['main']['temp'] - 273.15, 1) # Temperature converted from fucking Kelvin
@@ -60,26 +47,31 @@ def draw_on_image(timestamp, weather, location_kristin, location_jens, image):
     draw.text(((EPD_WIDTH // 2 - w // 2), 10), text, font = font, fill = 0)
 
     # Time
-    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 185)
+    font = ImageFont.truetype('NotoSans-Bold.ttf', 185)
     time_text = timestamp.strftime("%H:%M")
-    time_text = time_text[:-1] + "?"
+    time_text = time_text[:-1] + "0"
     w, h = draw.textsize(time_text, font)
-    draw.text((EPD_WIDTH // 2 - w //2, 35), time_text, font = font, fill = 0)
+    draw.text((EPD_WIDTH // 2 - w // 2, 0), time_text, font = font, fill = 0)
 
     # Location
-    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 40)
+    font = ImageFont.truetype('NotoSans-Regular.ttf', 40)
     kristin_text = "Kristin: {}".format(location_kristin)
     w, h = draw.textsize(kristin_text, font)
-    draw.text((143, 210), kristin_text, font = font, fill = 0)
+    draw.text((0, 210), kristin_text, font = font, fill = 0, align="Left")
     jens_text = "Jens: {}".format(location_jens)
     w, h = draw.textsize(jens_text, font)
-    draw.text((215, 250), jens_text, font = font, fill = 0)
+    draw.text((400, 210), jens_text, font = font, fill = 0, align="Right")
 
     # Quotes
-    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 30)
-    quote = random.choice(QUOTES)
-    w, h = draw.textsize(quote, font)
-    draw.text(((EPD_WIDTH // 2 - w // 2), 290 + (max(0, 42 - (h // 2)))), quote, font = font, fill = 127)
+    font = ImageFont.truetype('NotoSerif-Regular.ttf', 24)
+    quote = wikipedia.random_event()
+    lines = textwrap.wrap(quote, width=50)
+    MAX_LENGTH = 4
+    if len(lines) > MAX_LENGTH:
+        lines[MAX_LENGTH - 1] = lines[MAX_LENGTH - 1] + "..."
+    for i, line in enumerate(lines[:MAX_LENGTH]):
+        w, h = draw.textsize(line, font)
+        draw.text(((EPD_WIDTH // 2 - w // 2), 270 + (i * 24)), line, font = font, fill = 127)
 
 if __name__ == "__main__":
     get_image().show()
