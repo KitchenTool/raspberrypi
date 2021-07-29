@@ -35,8 +35,8 @@ def get_image():
     return image
 
 def get_font(fontname, size):
-    path = Path(__file__).absolute() / fontname
-    return ImageFont.truetype(path, size)
+    path = Path(__file__).absolute().parent / fontname
+    return ImageFont.truetype(str(path), size)
 
 def draw_on_image(timestamp, weather, location_kristin, location_jens, image):
     draw = ImageDraw.Draw(image)
