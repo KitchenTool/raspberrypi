@@ -5,6 +5,7 @@ from PIL import ImageOps
 
 from datetime import datetime
 from urllib import request
+from pathlib import Path
 import json
 import textwrap
 import pytz
@@ -33,12 +34,16 @@ def get_image():
     draw_on_image(timestamp, weather, location_kristin, location_jens, image)
     return image
 
+def get_font(fontname, size):
+    path = Path(__file__).absolute() / fontname
+    return ImageFont.truetype(path, size)
+
 def draw_on_image(timestamp, weather, location_kristin, location_jens, image):
     draw = ImageDraw.Draw(image)
     #draw.rectangle((0, 6, 640, 40), fill = 127)
 
     # Date and weather
-    font = ImageFont.truetype('NotoSans-Bold.ttf', 25)
+    font = get_font('NotoSans-Bold.ttf', 25)
     date_text = timestamp.strftime("%A %d/%m/%y")
     condition = weather['weather'][0]['main'] # Weather condition like 'Rain'
     temperature = round(weather['main']['temp'] - 273.15, 1) # Temperature converted from fucking Kelvin
@@ -47,14 +52,14 @@ def draw_on_image(timestamp, weather, location_kristin, location_jens, image):
     draw.text(((EPD_WIDTH // 2 - w // 2), 10), text, font = font, fill = 0)
 
     # Time
-    font = ImageFont.truetype('NotoSans-Bold.ttf', 185)
+    font = get_font('NotoSans-Bold.ttf', 185)
     time_text = timestamp.strftime("%H:%M")
     time_text = time_text[:-1] + "0"
     w, h = draw.textsize(time_text, font)
     draw.text((EPD_WIDTH // 2 - w // 2, 0), time_text, font = font, fill = 0)
 
     # Location
-    font = ImageFont.truetype('NotoSans-Regular.ttf', 40)
+    font = get_font('NotoSans-Regular.ttf', 40)
     kristin_text = "Kristin: {}".format(location_kristin)
     w, h = draw.textsize(kristin_text, font)
     draw.text((0, 210), kristin_text, font = font, fill = 0, align="Left")
@@ -63,7 +68,7 @@ def draw_on_image(timestamp, weather, location_kristin, location_jens, image):
     draw.text((400, 210), jens_text, font = font, fill = 0, align="Right")
 
     # Quotes
-    font = ImageFont.truetype('NotoSerif-Regular.ttf', 24)
+    font = get_font('NotoSerif-Regular.ttf', 24)
     quote = wikipedia.random_event()
     lines = textwrap.wrap(quote, width=50)
     MAX_LENGTH = 4
