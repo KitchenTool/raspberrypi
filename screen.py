@@ -24,8 +24,8 @@ def get_image():
     weather = json.loads(weather_json)
 
     # Prepare location data
-    location_kristin = request.urlopen('https://eunoiapp-server.vercel.app/kristin/location').read().decode()
-    location_jens = request.urlopen('https://eunoiapp-server.vercel.app/Jens/location').read().decode()
+    location_kristin = request.urlopen('https://eunoiapp-server.vercel.app/location/Kristin').read().decode()
+    location_jens = request.urlopen('https://eunoiapp-server.vercel.app/location/Jens').read().decode()
 
     # For simplicity, the arguments are explicit numerical coordinates
     image = Image.new('L', (EPD_WIDTH, EPD_HEIGHT), 255) # 255: clear the frame
