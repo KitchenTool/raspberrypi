@@ -5,6 +5,7 @@ from PIL import ImageOps
 
 from datetime import datetime
 from urllib import request
+import requests
 from pathlib import Path
 import json
 import textwrap
@@ -24,8 +25,9 @@ def get_image():
     weather = json.loads(weather_json)
 
     # Prepare location data
-    location_kristin = request.urlopen('https://eunoiapp-server.vercel.app/location/Kristin').read().decode()
-    location_jens = request.urlopen('https://eunoiapp-server.vercel.app/location/Jens').read().decode()
+    locations = requests.get('https://getpantry.cloud/apiv1/pantry/eed42050-989b-424b-8638-a2dec10c4be4/basket/location').json()
+    location_kristin = locations['Kristin']
+    location_jens = locations['Jens']
 
     # For simplicity, the arguments are explicit numerical coordinates
     image = Image.new('L', (EPD_WIDTH, EPD_HEIGHT), 255) # 255: clear the frame
