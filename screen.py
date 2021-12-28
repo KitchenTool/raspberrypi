@@ -25,7 +25,7 @@ def get_image():
     weather = json.loads(weather_json)
 
     # Prepare location data
-    locations = requests.get('https://getpantry.cloud/apiv1/pantry/eed42050-989b-424b-8638-a2dec10c4be4/basket/location').json()
+    locations = requests.get('https://getpantry.cloud/apiv1/pantry/48efc8f7-3ca8-432b-bdb3-b12e7a3c7dcd/basket/location').json()
     location_kristin = locations['Kristin']
     location_jens = locations['Jens']
 
