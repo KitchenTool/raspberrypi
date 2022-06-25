@@ -25,7 +25,9 @@ def cache_day():
     p = bs4.BeautifulSoup(body, 'html.parser')
 
     items = []
-    for sibling in p.body.find(class_="mw-parser-output").find("h2", recursive=False).next_siblings:
+    generator = p.body.find("div", {"class":"mw-body-content"}).find("h3").next_siblings
+    
+    for sibling in generator:
         if sibling.name == "h2":
             break
         
