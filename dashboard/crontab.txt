@@ -1,0 +1,2 @@
+# Run the download_images.py script one minute after midnight every day
+1 0 * * * /usr/local/bin/python3 /usr/src/app/download_images.py >> /var/log/cron.log 2>&1

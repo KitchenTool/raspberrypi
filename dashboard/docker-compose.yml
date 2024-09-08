@@ -1,0 +1,13 @@
+services:
+  server:
+    build: 
+      context: .  # The build context is the current directory
+      dockerfile: Dockerfile  # Specify the Dockerfile
+    environment:  
+      - NEXTCLOUD_KEY=${NEXTCLOUD_KEY} 
+    container_name: server
+    volumes:
+      - ./public:/usr/src/app/public  # Mount the local 'public' directory to the container
+    ports:
+      - "8000:8000"  # Map port 8000 of the host to port 8000 of the container
+    restart: unless-stopped  # Restart the container unless it is stopped manually
